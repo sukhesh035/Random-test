@@ -1,0 +1,134 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>CR Mantra</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+    <script>
+        var app = angular.module("testModule", []);
+        app.factory("displayFactory", function ($http) {
+            return {
+                getPeopleList: function () {
+                    return $http.get("display.json").then(function (response) {
+                        return response.data;
+                    });
+                }
+            }
+        });
+        app.controller("testController", function ($scope, displayFactory) {
+            $scope.peopleList = [];
+            $scope.currentUser = {}
+
+
+            $scope.getPeopleListJson = function () {
+                displayFactory.getPeopleList().then(function (response) {
+                    $scope.peopleList = response.People;
+                    $scope.currentUser = $scope.peopleList[0];
+                });
+
+            }
+            $scope.getPeopleListJson();
+            $scope.seletedUser = function (index) {
+                console.log(index);
+                $scope.currentUser = $scope.peopleList[index];
+            }
+        });
+    </script>
+    <style>
+        .left_section {
+            height: 500px;
+        }
+
+        .left_section .people_tabs {
+            border: 1px solid #6d5b5b;
+            padding: 40px 10px;
+            cursor: pointer;
+        }
+
+        .header_section {
+            display: flow-root;
+            margin-top: 70px;
+            margin-bottom: 40px;
+        }
+
+        .right_section img {
+            width: 100px;
+            border-radius: 10px;
+        }
+        .search_field input{
+            border-radius: 25px;
+            padding: 11px
+        }
+        .right_top_section a{
+                padding: 20px;
+    background: #505050;
+    color: #fff;
+    border-radius: 5px;
+            margin-left: 100px;
+        }
+    </style>
+</head>
+
+<body ng-app="testModule">
+    <div class="container" ng-controller="testController">
+        <div class="row">
+            <div class="header_section">
+                <div class="search_field col-lg-2">
+<!--                    <span class="glyphicon glyphicon-search"></span>-->
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="profile_details pull-right">
+                    <h6 class="pull-left">{{currentUser.name}}</h6>
+                    <span class="glyphicon glyphicon-user" style="font-size: 40px;"></span>
+                </div>
+            </div>
+            <div class="left_section col-lg-2">
+                <div ng-repeat="item in peopleList">
+                    <div class="people_tabs" ng-click="seletedUser($index)">
+                        <span>{{item.name}}</span>
+                        <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="right_section col-lg-8">
+                <div class="right_top_section">
+                    <img src="{{currentUser.img}}" alt="">
+                    <a>Send Message</a>
+                    <span>Rating {{currentUser.rating }} out of 5</span>
+                </div>
+                <div style="padding: 20px;margin: 20px 0px;box-shadow: -4.2px 0px 0px #888888;">
+                    <p>{{currentUser.Description}}</p>
+                </div>
+                <div style="display: flex;">
+                    <div>
+
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <td>Likes</td>
+                            <td>
+                                Dislikes
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <h6 ng-repeat="like in currentUser.Likes">{{like}}</h6><br>
+                            </td>
+                            <td>
+                                <h6 ng-repeat="unlike in currentUser.Dislikes">{{unlike}}</h6>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
