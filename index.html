@@ -16,7 +16,7 @@
             <div class="row col-lg-12">
                 <div class="header_section col-lg-12">
                     <div class="search_field col-lg-2">
-                        <input type="text" placeholder="Search...">
+                        <input type="text" placeholder="Search..." ng-model="searchVal">
                     </div>
                     <div class="profile_details pull-right">
                         <h6 class="pull-left">{{currentUser.name}}</h6>
@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="left_section col-lg-2">
-                    <div ng-repeat="item in peopleList">
+                    <div ng-repeat="item in peopleList | filter:searchVal">
                         <div class="people_tabs" ng-click="seletedUser($index)">
                             <span>{{item.name}}</span>
                             <span class="glyphicon glyphicon-arrow-right pull-right"></span>
